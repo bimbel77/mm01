@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Perjalanan Bilangan Cacah 100.000</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%);
+            min-height: 100vh;
+        }
+        .card-shadow {
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1), 0 8px 15px -6px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col items-center justify-center p-3 md:p-6">
+
+    <div id="app" class="w-full max-w-3xl bg-white rounded-3xl card-shadow overflow-hidden border-4 border-amber-300">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 p-6 text-white text-center relative">
+            <!-- Back Button -->
+            <button id="btn-back" onclick="returnToWelcome()" class="hidden absolute top-4 left-4 bg-white/20 hover:bg-white/30 backdrop-blur-md px-3 py-1.5 rounded-full text-xs md:text-sm font-semibold transition flex items-center gap-1">
+                ⬅️ Kembali ke Peta
+            </button>
+            <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs md:text-sm font-semibold">
+                🎯 Kelas V • Kurikulum Merdeka
+            </div>
+            <h1 class="text-2xl md:text-4xl font-extrabold tracking-wide mt-2">🗺️ Petualangan Perjalanan Bilangan</h1>
+            <p class="text-amber-100 text-xs md:text-sm mt-1">Jelajahi 5 Pos Tantangan Angka Sampai 100.000</p>
+        </div>
+
+        <!-- Main Game Container -->
+        <div class="p-4 md:p-8" id="game-container">
+            
+            <!-- Welcome / Map Overview Screen -->
+            <div id="screen-welcome" class="space-y-6">
+                <div class="text-center space-y-3">
+                    <div class="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center mx-auto text-5xl shadow-inner animate-bounce">
+                        🚗💨
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-700">Pilih Pos Perjalananmu!</h2>
+                    <p class="text-slate-500 max-w-md mx-auto text-sm md:text-base">
+                        Selesaikan misi di setiap pos perjalanan untuk menguji kemampuan membaca, menulis, nilai tempat, dan menyusun bilangan cacah besar!
+                    </p>
+                </div>
+
+                <!-- Journey Map Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-2">
+                    <div onclick="startStage(0)" class="cursor-pointer bg-gradient-to-b from-sky-400 to-sky-600 text-white p-4 rounded-2xl text-center shadow-md transform hover:-translate-y-1 transition border-2 border-sky-300">
+                        <div class="text-2xl">🏁</div>
+                        <div class="font-bold mt-1 text-sm">Pos 1</div>
+                        <div class="text-xs text-sky-100 mt-1">Hubungkan Bacaan</div>
+                    </div>
+                    <div onclick="startStage(1)" class="cursor-pointer bg-gradient-to-b from-emerald-400 to-emerald-600 text-white p-4 rounded-2xl text-center shadow-md transform hover:-translate-y-1 transition border-2 border-emerald-300">
+                        <div class="text-2xl">📊</div>
+                        <div class="font-bold mt-1 text-sm">Pos 2</div>
+                        <div class="text-xs text-emerald-100 mt-1">Lengkapi Tabel</div>
+                    </div>
+                    <div onclick="startStage(2)" class="cursor-pointer bg-gradient-to-b from-violet-400 to-violet-600 text-white p-4 rounded-2xl text-center shadow-md transform hover:-translate-y-1 transition border-2 border-violet-300">
+                        <div class="text-2xl">🔍</div>
+                        <div class="font-bold mt-1 text-sm">Pos 3</div>
+                        <div class="text-xs text-violet-100 mt-1">Nilai Tempat Angka</div>
+                    </div>
+                    <div onclick="startStage(3)" class="cursor-pointer bg-gradient-to-b from-amber-400 to-amber-600 text-white p-4 rounded-2xl text-center shadow-md transform hover:-translate-y-1 transition border-2 border-amber-300">
+                        <div class="text-2xl">⚖️</div>
+                        <div class="font-bold mt-1 text-sm">Pos 4</div>
+                        <div class="text-xs text-amber-100 mt-1">Perbandingan & Urutan</div>
+                    </div>
+                    <div onclick="startStage(4)" class="cursor-pointer bg-gradient-to-b from-rose-400 to-rose-600 text-white p-4 rounded-2xl text-center shadow-md transform hover:-translate-y-1 transition border-2 border-rose-300">
+                        <div class="text-2xl">🏆</div>
+                        <div class="font-bold mt-1 text-sm">Pos 5</div>
+                        <div class="text-xs text-rose-100 mt-1">Tantangan Akhir</div>
+                    </div>
+                </div>
+
+                <div class="text-center pt-4">
+                    <button onclick="startStage(0)" class="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold text-lg rounded-2xl shadow-lg transition">
+                        Mulai Perjalanan Beruntun 🚀
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stage 1: Matching Game (Hubungkan Bilangan) -->
+            <div id="stage-0" class="hidden space-y-6">
+                <div class="flex justify-between items-center bg-slate-100 p-3 rounded-2xl font-semibold text-sm">
+                    <div class="text-sky-600">Pos 1: Hubungkan Cara Baca & Bilangan</div>
+                    <div class="text-amber-600">Skor: <span id="s1-score">0</span></div>
+                </div>
+                <p class="text-sm text-slate-600 text-center">Klik sebuah pernyataan cara baca di kiri, lalu klik angka yang sesuai di kanan!</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Left Column: Words -->
+                    <div id="match-left" class="space-y-3"></div>
+                    <!-- Right Column: Numbers -->
+                    <div id="match-right" class="space-y-3"></div>
+                </div>
+
+                <div id="stage1-feedback" class="text-center font-bold text-sm min-h-[30px]"></div>
+            </div>
+
+            <!-- Stage 2: Table Completion (Lengkapi Tabel) -->
+            <div id="stage-1" class="hidden space-y-6">
+                <div class="flex justify-between items-center bg-slate-100 p-3 rounded-2xl font-semibold text-sm">
+                    <div class="text-emerald-600">Pos 2: Lengkapi Tabel Misteri Bilangan</div>
+                    <div class="text-amber-600">Skor: <span id="s2-score">0</span></div>
+                </div>
+                <p class="text-sm text-slate-600 text-center">Isilah bagian kotak kosong (<code class="bg-slate-200 px-1 rounded font-bold">...</code>) pada tabel di bawah ini dengan tepat sesuai informasi angka 7!</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse bg-slate-50 rounded-2xl overflow-hidden shadow-sm">
+                        <thead>
+                            <tr class="bg-emerald-600 text-white text-xs md:text-sm">
+                                <th class="p-3">Bilangan</th>
+                                <th class="p-3">Dibaca</th>
+                                <th class="p-3">Nilai Tempat Angka "7"</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="text-xs md:text-sm divide-y divide-slate-200">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center">
+                    <button onclick="checkTableAnswers()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow transition">
+                        Periksa Jawaban Tabel ✅
+                    </button>
+                </div>
+                <div id="stage2-feedback" class="text-center font-bold text-sm min-h-[30px]"></div>
+            </div>
+
+            <!-- Stage 3 & 4 & 5: Interactive Quiz / Destination Checkpoints -->
+            <div id="stage-quiz" class="hidden space-y-6">
+                <div class="flex justify-between items-center bg-slate-100 p-3 rounded-2xl font-semibold text-sm">
+                    <div id="quiz-stage-title" class="text-violet-600">Pos Misi</div>
+                    <div class="text-amber-600">Skor: <span id="quiz-score">0</span></div>
+                </div>
+
+                <div class="bg-violet-50 border-2 border-violet-200 rounded-2xl p-6 text-center space-y-3">
+                    <span id="quiz-badge" class="inline-block bg-violet-200 text-violet-800 text-xs font-bold px-3 py-1 rounded-full uppercase">Pertanyaan</span>
+                    <h3 id="quiz-question" class="text-lg md:text-xl font-bold text-slate-700 leading-snug"></h3>
+                </div>
+
+                <div id="quiz-options" class="grid grid-cols-1 gap-3"></div>
+                <div id="quiz-feedback" class="hidden p-4 rounded-2xl text-center font-bold"></div>
+            </div>
+
+            <!-- Result Summary Screen -->
+            <div id="screen-result" class="hidden text-center space-y-6 py-4">
+                <div class="w-28 h-28 bg-amber-100 rounded-full flex items-center justify-center mx-auto text-6xl shadow-inner">
+                    🎉
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-bold text-slate-700">Perjalanan Selesai!</h2>
+                    <p class="text-slate-500">Hebat! Kamu telah berhasil menaklukkan seluruh pos perjalanan bilangan cacah.</p>
+                </div>
+
+                <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 max-w-xs mx-auto space-y-2">
+                    <div class="text-sm text-slate-400 uppercase font-bold">Total Skor Perjalanan</div>
+                    <div id="final-total-score" class="text-4xl font-extrabold text-amber-600">0</div>
+                    <div id="final-badge" class="text-sm font-semibold text-emerald-600 pt-2">🌟 Penjelajah Angka Utama</div>
+                </div>
+
+                <div class="pt-2 flex justify-center gap-3">
+                    <button onclick="resetGame()" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-lg transition">
+                        Pilih Pos / Main Lagi 🗺️
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-slate-50 px-6 py-4 border-t border-slate-100 text-center text-xs text-slate-400">
+            Matematika Kelas 5 SD • Berdasarkan Materi Buku Kurikulum Merdeka
+        </div>
+    </div>
+
+    <script>
+        let totalScore = 0;
+        let currentActiveStage = 0;
+
+        // Data for Stage 1: Matching
+        const matchData = [
+            { id: 1, text: "Tiga belas ribu empat ratus lima puluh enam", num: "13.456" },
+            { id: 2, text: "Empat puluh ribu tiga ratus lima puluh", num: "40.350" },
+            { id: 3, text: "Delapan puluh delapan ribu sembilan ratus tujuh puluh enam", num: "88.976" },
+            { id: 4, text: "Dua puluh lima ribu tujuh ratus delapan puluh enam", num: "25.786" },
+            { id: 5, text: "Lima puluh empat ribu enam ratus tujuh puluh lima", num: "54.675" }
+        ];
+        let selectedMatchLeft = null;
+        let matchPairsFound = 0;
+
+        // Data for Stage 2: Table (Strictly matched to curriculum workbook image)
+        const tableData = [
+            { 
+                bil: "87.986", 
+                read: "Delapan puluh tujuh ribu sembilan ratus delapan puluh enam", 
+                place: "ribuan",
+                missing: "read" // row 1 missing read
+            },
+            { 
+                bil: "56.786", 
+                read: "Lima puluh enam ribu tujuh ratus delapan puluh enam", 
+                place: "puluh ribuan", 
+                missing: "bil" // row 2 missing bilangan
+            },
+            { 
+                bil: "47.291", 
+                read: "Empat puluh tujuh ribu dua ratus sembilan puluh satu", 
+                place: "Puluh ribuan dan satuan", 
+                missing: "all" // row 3 missing bil & read
+            }
+        ];
+
+        // Data for Stage 3 & 4 (Quizzes)
+        const quizStagesData = [
+            {
+                title: "Pos 3: Nilai Tempat & Angka",
+                badge: "Analisis Nilai Tempat",
+                question: "Pada bilangan 74.982, angka 7 menempati nilai tempat...",
+                options: ["Puluhan ribu", "Ribuan", "Ratusan", "Puluhan"],
+                correct: 0
+            },
+            {
+                title: "Pos 4: Perbandingan & Urutan",
+                badge: "Perbandingan Bilangan",
+                question: "Tanda perbandingan yang tepat untuk 54.320 ... 54.230 adalah...",
+                options: ["<", ">", "=", "+"],
+                correct: 1
+            }
+        ];
+        let currentQuizIndex = 0;
+
+        function showScreen(screenId) {
+            document.getElementById('screen-welcome').classList.add('hidden');
+            document.getElementById('stage-0').classList.add('hidden');
+            document.getElementById('stage-1').classList.add('hidden');
+            document.getElementById('stage-quiz').classList.add('hidden');
+            document.getElementById('screen-result').classList.add('hidden');
+
+            document.getElementById(screenId).classList.remove('hidden');
+
+            // Show or hide back button
+            const btnBack = document.getElementById('btn-back');
+            if (screenId === 'screen-welcome') {
+                btnBack.classList.add('hidden');
+            } else {
+                btnBack.classList.remove('hidden');
+            }
+        }
+
+        function returnToWelcome() {
+            showScreen('screen-welcome');
+        }
+
+        function startStage(stageNum) {
+            currentActiveStage = stageNum;
+            if (stageNum === 0) {
+                showScreen('stage-0');
+                initStage1();
+            } else if (stageNum === 1) {
+                showScreen('stage-1');
+                initStage2();
+            } else if (stageNum >= 2 && stageNum <= 3) {
+                currentQuizIndex = stageNum - 2;
+                showScreen('stage-quiz');
+                initQuizStage();
+            } else {
+                showFinalResult();
+            }
+        }
+
+        function initStage1() {
+            matchPairsFound = 0;
+            selectedMatchLeft = null;
+            document.getElementById('s1-score').innerText = totalScore;
+            document.getElementById('stage1-feedback').innerText = "";
+
+            const leftContainer = document.getElementById('match-left');
+            const rightContainer = document.getElementById('match-right');
+            leftContainer.innerHTML = '';
+            rightContainer.innerHTML = '';
+
+            let shuffledLeft = [...matchData].sort(() => Math.random() - 0.5);
+            let shuffledRight = [...matchData].sort(() => Math.random() - 0.5);
+
+            shuffledLeft.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-2xl bg-sky-50 border-2 border-sky-200 hover:border-sky-500 font-semibold text-xs md:text-sm text-slate-700 transition shadow-sm";
+                btn.innerText = item.text;
+                btn.dataset.id = item.id;
+                btn.onclick = () => selectLeftMatch(item.id, btn);
+                leftContainer.appendChild(btn);
+            });
+
+            shuffledRight.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-center p-3 rounded-2xl bg-amber-50 border-2 border-amber-200 hover:border-amber-500 font-bold text-base md:text-lg text-amber-800 transition shadow-sm";
+                btn.innerText = item.num;
+                btn.dataset.id = item.id;
+                btn.onclick = () => selectRightMatch(item.id, btn);
+                rightContainer.appendChild(btn);
+            });
+        }
+
+        function selectLeftMatch(id, btnElement) {
+            document.querySelectorAll('#match-left button').forEach(b => b.classList.remove('ring-4', 'ring-sky-300', 'bg-sky-100'));
+            btnElement.classList.add('ring-4', 'ring-sky-300', 'bg-sky-100');
+            selectedMatchLeft = id;
+        }
+
+        function selectRightMatch(id, btnElement) {
+            if (!selectedMatchLeft) {
+                document.getElementById('stage1-feedback').innerText = "⚠️ Pilih dulu pernyataan cara baca di sebelah kiri!";
+                document.getElementById('stage1-feedback').className = "text-center font-bold text-sm text-rose-600";
+                return;
+            }
+
+            const feedback = document.getElementById('stage1-feedback');
+            if (selectedMatchLeft === id) {
+                feedback.innerText = "🎉 Benar! Pasangan cocok.";
+                feedback.className = "text-center font-bold text-sm text-emerald-600";
+                
+                const leftBtn = document.querySelector(`#match-left button[data-id='${id}']`);
+                leftBtn.style.opacity = '0.5';
+                leftBtn.style.pointerEvents = 'none';
+                leftBtn.className = "w-full text-left p-3 rounded-2xl bg-emerald-100 border-2 border-emerald-400 font-semibold text-xs md:text-sm text-emerald-800";
+                
+                btnElement.style.opacity = '0.5';
+                btnElement.style.pointerEvents = 'none';
+                btnElement.className = "w-full text-center p-3 rounded-2xl bg-emerald-100 border-2 border-emerald-400 font-bold text-base text-emerald-800";
+
+                totalScore += 5;
+                document.getElementById('s1-score').innerText = totalScore;
+                matchPairsFound++;
+                selectedMatchLeft = null;
+
+                if (matchPairsFound === matchData.length) {
+                    setTimeout(() => {
+                        startStage(1);
+                    }, 1000);
+                }
+            } else {
+                feedback.innerText = "❌ Belum tepat, coba pasangkan lagi!";
+                feedback.className = "text-center font-bold text-sm text-rose-600";
+            }
+        }
+
+        function initStage2() {
+            document.getElementById('s2-score').innerText = totalScore;
+            document.getElementById('stage2-feedback').innerText = "";
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            tableData.forEach((row, idx) => {
+                let tr = document.createElement('tr');
+                
+                let colBil = row.missing === 'read' ? `<span class="font-bold">${row.bil}</span>` : `<input type="text" id="t-bil-${idx}" class="w-full p-2 border-2 border-emerald-200 rounded-lg text-xs md:text-sm focus:border-emerald-500 outline-none" placeholder="Isi angka...">`;
+                let colRead = (row.missing === 'read' || row.missing === 'all') ? `<input type="text" id="t-read-${idx}" class="w-full p-2 border-2 border-emerald-200 rounded-lg text-xs md:text-sm focus:border-emerald-500 outline-none" placeholder="Tulis cara baca...">` : `<span>${row.read}</span>`;
+                let colPlace = `<span>${row.place}</span>`;
+
+                tr.innerHTML = `
+                    <td class="p-3">${colBil}</td>
+                    <td class="p-3">${colRead}</td>
+                    <td class="p-3 font-semibold text-emerald-700">${colPlace}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function checkTableAnswers() {
+            let r1Input = document.getElementById('t-read-0');
+            let r2Input = document.getElementById('t-bil-1');
+            let r3BilInput = document.getElementById('t-bil-2');
+            let r3ReadInput = document.getElementById('t-read-2');
+
+            let isCorrect = true;
+            let feedback = document.getElementById('stage2-feedback');
+
+            if (r1Input && !r1Input.value.toLowerCase().includes("delapan puluh tujuh ribu")) isCorrect = false;
+            if (r2Input && r2Input.value.trim() !== "56.786") isCorrect = false;
+            if (r3BilInput && r3BilInput.value.trim() !== "47.291" && r3BilInput.value.trim() !== "74.297") isCorrect = false;
+            if (r3ReadInput && r3ReadInput.value.trim() === "") isCorrect = false;
+
+            if (isCorrect) {
+                feedback.innerText = "🎉 Luar Biasa! Tabel Berhasil Dilengkapi dengan Sempurna!";
+                feedback.className = "text-center font-bold text-sm text-emerald-600";
+                totalScore += 15;
+                document.getElementById('s2-score').innerText = totalScore;
+                setTimeout(() => {
+                    startStage(2); // Move to Pos 3 Quiz
+                }, 1500);
+            } else {
+                feedback.innerText = "💡 Ada jawaban yang belum tepat. Periksa kembali ejaan atau angka pada tabel!";
+                feedback.className = "text-center font-bold text-sm text-amber-600";
+            }
+        }
+
+        function initQuizStage() {
+            const q = quizStagesData[currentQuizIndex];
+            document.getElementById('quiz-stage-title').innerText = q.title;
+            document.getElementById('quiz-score').innerText = totalScore;
+            document.getElementById('quiz-badge').innerText = q.badge;
+            document.getElementById('quiz-question').innerText = q.question;
+
+            const optContainer = document.getElementById('quiz-options');
+            optContainer.innerHTML = '';
+            const feedbackBox = document.getElementById('quiz-feedback');
+            feedbackBox.classList.add('hidden');
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl bg-white border-2 border-slate-200 hover:border-violet-400 hover:bg-violet-50 font-semibold text-slate-700 transition shadow-sm flex items-center gap-3";
+                btn.innerHTML = `<span class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-sm font-bold">${String.fromCharCode(65 + idx)}</span> ${opt}`;
+                btn.onclick = () => selectQuizAnswer(idx, btn, q.correct);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizAnswer(selectedIndex, btnElement, correctIndex) {
+            const feedbackBox = document.getElementById('quiz-feedback');
+            const allBtns = document.querySelectorAll('#quiz-options button');
+
+            for (let b of allBtns) b.style.pointerEvents = 'none';
+
+            if (selectedIndex === correctIndex) {
+                btnElement.className = "w-full text-left p-4 rounded-2xl bg-emerald-100 border-2 border-emerald-500 font-semibold text-emerald-800";
+                feedbackBox.innerText = "🎉 Jawaban Benar! Melaju ke Pos Berikutnya!";
+                feedbackBox.className = "p-4 rounded-2xl text-center font-bold bg-emerald-100 text-emerald-700 border-2 border-emerald-300";
+                totalScore += 10;
+                document.getElementById('quiz-score').innerText = totalScore;
+            } else {
+                btnElement.className = "w-full text-left p-4 rounded-2xl bg-rose-100 border-2 border-rose-500 font-semibold text-rose-800";
+                allBtns[correctIndex].className = "w-full text-left p-4 rounded-2xl bg-emerald-100 border-2 border-emerald-500 font-semibold text-emerald-800";
+                feedbackBox.innerText = "💡 Kurang Tepat, Tetap Semangat!";
+                feedbackBox.className = "p-4 rounded-2xl text-center font-bold bg-rose-100 text-rose-700 border-2 border-rose-300";
+            }
+            feedbackBox.classList.remove('hidden');
+
+            setTimeout(() => {
+                if (currentQuizIndex < quizStagesData.length - 1) {
+                    currentQuizIndex++;
+                    startStage(2 + currentQuizIndex);
+                } else {
+                    startStage(4); // Final Result
+                }
+            }, 2000);
+        }
+
+        function showFinalResult() {
+            showScreen('screen-result');
+            document.getElementById('final-total-score').innerText = totalScore;
+            const badge = document.getElementById('final-badge');
+            if (totalScore >= 40) {
+                badge.innerText = "🌟 Penjelajah Angka Ahli (Sangat Hebat!)";
+            } else {
+                badge.innerText = "👍 Penjelajah Angka Tangguh!";
+            }
+        }
+
+        function resetGame() {
+            totalScore = 0;
+            showScreen('screen-welcome');
+        }
+    </script>
+</body>
+</html>
